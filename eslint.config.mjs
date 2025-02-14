@@ -1,6 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
-import eslintQueryPlugin from '@tanstack/eslint-plugin-query'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import importPlugin from 'eslint-plugin-import'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
@@ -19,8 +18,10 @@ const eslintConfig = [
 	js.configs.recommended,
 	eslintPluginPrettierRecommended,
 	eslintConfigPrettier,
-	...eslintQueryPlugin.configs['flat/recommended'],
 	...compat.extends('next/core-web-vitals', 'next/typescript'),
+	{
+		ignores: ['next-auth.d.ts']
+	},
 	{
 		plugins: {
 			'simple-import-sort': simpleImportSortPlugin,
