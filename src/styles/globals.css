@@ -4,10 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+/* @theme {
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
-}
+} */
 
 :root {
 	--background: hsl(0 0% 100%);
@@ -16,9 +16,9 @@
 	--card-foreground: hsl(240 10% 3.9%);
 	--popover: hsl(0 0% 100%);
 	--popover-foreground: hsl(240 10% 3.9%);
-	--primary: hsl(240 5.9% 10%);
+	--primary: hsl(358 70% 33%);
 	--primary-foreground: hsl(0 0% 98%);
-	--secondary: hsl(240 4.8% 95.9%);
+	--secondary: hsl(358 81% 51%);
 	--secondary-foreground: hsl(240 5.9% 10%);
 	--muted: hsl(240 4.8% 95.9%);
 	--muted-foreground: hsl(240 3.8% 46.1%);
