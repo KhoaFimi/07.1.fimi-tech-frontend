@@ -1,19 +1,9 @@
-import { signOut } from '@/auth'
-import { Button } from '@/components/ui/button'
+import { LogoutButton } from '@/modules/auth/components/logout-button'
 
 const HomePage = async () => {
-	const logout = async () => {
-		'use server'
-		await signOut({
-			redirectTo: '/auth/login'
-		})
-	}
-
 	return (
 		<div>
-			<form action={logout}>
-				<Button>Logout</Button>
-			</form>
+			<LogoutButton />
 		</div>
 	)
 }

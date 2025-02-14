@@ -2,6 +2,7 @@ import '@/styles/globals.css'
 
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react'
 
 import { QueryProvider } from '@/components/providers/query-provider'
 import { ThemeProvider } from '@/components/providers/theme-provider'
@@ -28,10 +29,12 @@ export default function RootLayout({
 			suppressHydrationWarning
 		>
 			<body className={cn(font.className, 'antialiased')}>
-				<ThemeProvider>
-					<QueryProvider>{children}</QueryProvider>
-					<Toaster />
-				</ThemeProvider>
+				<SessionProvider>
+					<ThemeProvider>
+						<QueryProvider>{children}</QueryProvider>
+						<Toaster />
+					</ThemeProvider>
+				</SessionProvider>
 			</body>
 		</html>
 	)
