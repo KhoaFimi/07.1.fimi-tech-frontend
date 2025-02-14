@@ -10,13 +10,20 @@ interface FormResponseProps {
 	message?: string
 }
 
-export const FormReponse: Record<string, FC<FormResponseProps>> = {
+interface IFormResponse {
+	success: FC<FormResponseProps>
+	error: FC<FormResponseProps>
+	warning: FC<FormResponseProps>
+	pending: FC<FormResponseProps>
+}
+
+export const FormReponse: IFormResponse = {
 	success: ({ message }) => {
 		if (!message) return null
 
 		return (
-			<div className='flex items-center gap-x-1.5 rounded-md bg-emerald-500/15 p-3 text-sm text-emerald-500'>
-				<LucideCheckCircle className='size-4' />
+			<div className='flex items-start gap-x-1.5 rounded-md bg-emerald-500/15 p-3 text-sm text-emerald-500'>
+				<LucideCheckCircle className='size-8' />
 				<p className='tracking-tight'>{message}</p>
 			</div>
 		)

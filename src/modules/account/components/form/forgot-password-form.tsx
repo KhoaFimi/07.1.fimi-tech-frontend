@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -20,37 +19,32 @@ import {
 import { Input } from '@/components/ui/input'
 import { ErrorCode } from '@/constraint/code'
 import { cn } from '@/lib/utils'
-import { login } from '@/modules/auth/actions/login'
-import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
+import { forgotPassword } from '@/modules/account/actions/forgot-pasword'
+import {
+	ForgotPasswordSchema,
+	forgotPasswordSchema
+} from '@/modules/account/schemas/forgot-password-schema'
 
-export const LoginForm = () => {
+export const ForgotPasswordForm = () => {
 	const [error, setError] = useState<string | undefined>(undefined)
-	const [warning, setWarning] = useState<string | undefined>(undefined)
+	const [success, setSuccess] = useState<string | undefined>(undefined)
 
-	const form = useForm<LoginSchema>({
-		resolver: zodResolver(loginSchema),
+	const form = useForm<ForgotPasswordSchema>({
+		resolver: zodResolver(forgotPasswordSchema),
 		defaultValues: {
-			email: '',
-			password: ''
+			email: ''
 		}
 	})
 
 	const { mutate, isPending } = useMutation({
-		mutationFn: async (values: LoginSchema) => await login(values),
-		onSuccess: data => {
+		mutationFn: async (values: ForgotPasswordSchema) =>
+			await forgotPassword(values),
+		onSuccess: (data, variables) => {
 			if (!data?.success) {
 				if (data?.statusCode === ErrorCode.VAL_ERROR) {
-					data.error?.validationError.forEach((err: any) =>
+					data.error.validationError.foreach((err: any) =>
 						form.setError(err.field, err.detail)
 					)
-
-					return
-				}
-
-				if (data?.statusCode === ErrorCode.NOT_VERIFIED) {
-					setError(undefined)
-					setWarning(data.message)
-
 					return
 				}
 
@@ -58,24 +52,27 @@ export const LoginForm = () => {
 			}
 
 			if (data?.success) {
-				console.log(data)
+				setError(undefined)
+				setSuccess(
+					`Yêu cầu lấy lại mật khẩu thành công, email xác thực đã được gửi tới '${variables.email}'`
+				)
 			}
 		}
 	})
 
-	const onSubmit = (values: LoginSchema) => {
+	const onSubmit = (values: ForgotPasswordSchema) => {
 		mutate(values)
 	}
 
 	return (
 		<FormWrapper
 			header={{
-				title: 'Đăng nhập',
-				description: 'Chào mừng bạn đã trở lại'
+				title: 'Quên mật khẩu',
+				description: 'Hãy nhập Email đã đăng ký để xác thực và đặt lại mật khẩu'
 			}}
 			backButton={{
-				text: 'Bạn chưa có tài khoản, đăng ký ngay',
-				href: '/auth/register'
+				text: 'Đăng nhập',
+				href: '/auth/login'
 			}}
 		>
 			<Form {...form}>
@@ -108,49 +105,15 @@ export const LoginForm = () => {
 						)}
 					/>
 
-					{/* Re Password field */}
-					<div className='flex flex-col gap-2'>
-						<FormField
-							control={form.control}
-							name='password'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className='text-foreground/70 font-medium'>
-										Mật khẩu
-									</FormLabel>
-									<FormControl className='mt-2'>
-										<Input
-											className={cn(
-												'text-sm',
-												'transition-all duration-300 ease-in-out',
-												'focus-visible:ring-primary placeholder:text-sm placeholder:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
-											)}
-											disabled={isPending}
-											type='password'
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<Link
-							href='/account/forgot-password'
-							className='text-secondary ml-auto w-fit text-sm font-medium transition-all duration-300 ease-out hover:underline'
-						>
-							Quên mật khẩu
-						</Link>
-					</div>
-
 					<FormReponse.error message={error} />
-					<FormReponse.warning message={warning} />
+					<FormReponse.success message={success} />
 
 					<Button
 						type='submit'
 						className='mt-2 w-full cursor-pointer font-medium'
 						disabled={isPending}
 					>
-						Đăng nhập
+						Yêu cầu đặt lại mật khẩu
 					</Button>
 				</form>
 			</Form>
