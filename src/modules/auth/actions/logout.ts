@@ -13,8 +13,6 @@ export const logout = async () => {
 		redirect('/auth/login')
 	}
 
-	console.log(session.user)
-
 	const res = await http.put(`/auth/sign-out/${session.user.id}`)
 
 	const resData = res.data
