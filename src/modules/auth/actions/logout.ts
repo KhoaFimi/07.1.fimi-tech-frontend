@@ -18,7 +18,11 @@ export const logout = async () => {
 	const resData = res.data
 
 	if (res.status === 200) {
-		await signOut()
+		await signOut({
+			redirect: false
+		})
+
+		console.log('Logout from production')
 
 		return {
 			success: true,
