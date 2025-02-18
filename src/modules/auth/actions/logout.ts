@@ -22,8 +22,6 @@ export const logout = async () => {
 			redirect: false
 		})
 
-		console.log('Logout from production')
-
 		return {
 			success: true,
 			statusCode: resData.statusCode,

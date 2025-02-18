@@ -6,9 +6,13 @@ import { AuthError } from 'next-auth'
 import { signIn } from '@/auth'
 import { ErrorCode } from '@/constraint/code'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 import { ValidationError } from '@/types'
 
-export const login = async (values: LoginSchema) => {
+export const login = async (
+	values: LoginSchema,
+	callbackUrl?: string | null
+) => {
 	const validatedValues = loginSchema.safeParse(values)
 
 	if (!validatedValues.success)
@@ -30,7 +34,7 @@ export const login = async (values: LoginSchema) => {
 		await signIn('credentials', {
 			email: validatedValues.data.email,
 			password: validatedValues.data.password,
-			redirectTo: '/'
+			redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
 		if (isRedirectError(error)) {
@@ -61,6 +65,10 @@ export const login = async (values: LoginSchema) => {
 							message: 'Hệ thống gián đoạn, vui lòng thử lại sau'
 						}
 				}
+			}
+
+			if (error.type === 'CredentialsSignin') {
+				console.log('error in signin server action', error.message)
 			}
 		}
 	}

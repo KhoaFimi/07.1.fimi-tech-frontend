@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -24,6 +25,9 @@ import { login } from '@/modules/auth/actions/login'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
 
 export const LoginForm = () => {
+	const searchParams = useSearchParams()
+	const callbackUrl = searchParams.get('callbackUrl')
+
 	const [error, setError] = useState<string | undefined>(undefined)
 	const [warning, setWarning] = useState<string | undefined>(undefined)
 
@@ -36,7 +40,7 @@ export const LoginForm = () => {
 	})
 
 	const { mutate, isPending } = useMutation({
-		mutationFn: async (values: LoginSchema) => await login(values),
+		mutationFn: async (values: LoginSchema) => await login(values, callbackUrl),
 		onSuccess: data => {
 			if (!data?.success) {
 				if (data?.statusCode === ErrorCode.VAL_ERROR) {
@@ -55,10 +59,6 @@ export const LoginForm = () => {
 				}
 
 				setError(data?.message)
-			}
-
-			if (data?.success) {
-				console.log(data)
 			}
 		}
 	})
