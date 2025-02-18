@@ -28,7 +28,7 @@ export const authConfig = {
 						roles: user.roles,
 						accessToken,
 						refreshToken,
-						imaage: ''
+						image: user.profile ? user.profile.avatar.url : ''
 					}
 				} catch (error) {
 					if (error instanceof AxiosError) {
