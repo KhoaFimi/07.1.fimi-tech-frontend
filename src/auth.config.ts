@@ -32,6 +32,8 @@ export const authConfig = {
 					}
 				} catch (error) {
 					if (error instanceof AxiosError) {
+						console.log(error)
+
 						const errorData = error.response?.data
 
 						throw new Error(errorData.statusCode)
