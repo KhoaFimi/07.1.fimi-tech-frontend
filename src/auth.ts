@@ -29,9 +29,10 @@ const authOptions = {
 					const accessToken = resData.data.accessToken
 					const refreshToken = resData.data.refreshToken
 
-					return {
+					const userData = {
 						success: true,
 						id: user.id,
+						code: user.code,
 						name: user.fullname,
 						email: user.email,
 						roles: user.roles,
@@ -39,6 +40,8 @@ const authOptions = {
 						refreshToken,
 						image: user.profile ? user.profile.avatar.url : ''
 					}
+
+					return userData
 				} catch (error) {
 					if (error instanceof AxiosError) {
 						const errorData = error.response?.data
@@ -63,6 +66,7 @@ const authOptions = {
 			if (account && user) {
 				return {
 					...token,
+					code: user.code,
 					accessToken: user.accessToken,
 					refreshToken: user.refreshToken,
 					user
@@ -86,6 +90,7 @@ const authOptions = {
 			if (token) {
 				session.user.id = token.sub as string
 				session.user.name = token.name
+				session.user.code = token.code
 				session.user.accessToken = token.accessToken as string
 			}
 

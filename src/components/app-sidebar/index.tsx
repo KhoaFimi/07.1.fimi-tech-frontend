@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import { FC, PropsWithChildren } from 'react'
 
+import { AppSidebarFooter } from '@/components/app-sidebar/sidebar-footer'
 import { AppSidebarMenu } from '@/components/app-sidebar/sidebar-menu'
 import { AppSidebarTrigger } from '@/components/app-sidebar/sidebar-trigger'
 import {
 	Sidebar,
 	SidebarContent,
-	SidebarFooter,
 	SidebarHeader,
 	SidebarProvider
 } from '@/components/ui/sidebar'
@@ -21,8 +21,8 @@ const AppSidebar: FC<PropsWithChildren> = ({ children }) => {
 				<SidebarHeader className='p-2'>
 					<Image
 						src={'/logo.png'}
-						width={400}
-						height={200}
+						width={102}
+						height={44}
 						alt='Logo'
 						className='mx-auto h-[44px] w-[102px] px-2 select-none'
 					/>
@@ -30,7 +30,7 @@ const AppSidebar: FC<PropsWithChildren> = ({ children }) => {
 				<SidebarContent className='mt-8'>
 					<AppSidebarMenu />
 				</SidebarContent>
-				<SidebarFooter />
+				<AppSidebarFooter />
 			</Sidebar>
 			<main className='bg-foreground/5 h-screen w-full'>
 				<AppSidebarTrigger />

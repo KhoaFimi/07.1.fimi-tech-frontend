@@ -45,6 +45,16 @@ export const LoginForm: FC<LoginFormProps> = ({ callbackUrl }) => {
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: async (values: LoginSchema) => {
+			const validatedValues = loginSchema.safeParse(values)
+
+			if (!validatedValues.success) {
+				validatedValues.error.errors.forEach(err =>
+					form.setError(err.path as any, {
+						message: err.message
+					})
+				)
+			}
+
 			const res = await signIn('credentials', {
 				...values,
 				callbackUrl: '/',
