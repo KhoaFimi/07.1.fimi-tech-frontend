@@ -36,10 +36,6 @@ export const login = async (
 			password: validatedValues.data.password,
 			redirect: false
 		})
-
-		redirect(
-			callbackUrl ? decodeURIComponent(callbackUrl) : DEFAULT_LOGIN_REDIRECT
-		)
 	} catch (error) {
 		if (error instanceof AuthError) {
 			switch (error.type) {
@@ -58,4 +54,8 @@ export const login = async (
 			}
 		}
 	}
+
+	redirect(
+		callbackUrl ? decodeURIComponent(callbackUrl) : DEFAULT_LOGIN_REDIRECT
+	)
 }
