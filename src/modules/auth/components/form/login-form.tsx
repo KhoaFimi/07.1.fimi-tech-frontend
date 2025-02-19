@@ -3,8 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { FormReponse } from '@/components/form-response'
@@ -24,10 +23,11 @@ import { cn } from '@/lib/utils'
 import { login } from '@/modules/auth/actions/login'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
 
-export const LoginForm = () => {
-	const searchParams = useSearchParams()
-	const callbackUrl = searchParams.get('callbackUrl')
+interface LoginFormProps {
+	callbackUrl?: string
+}
 
+export const LoginForm: FC<LoginFormProps> = ({ callbackUrl }) => {
 	const [error, setError] = useState<string | undefined>(undefined)
 	const [warning, setWarning] = useState<string | undefined>(undefined)
 
