@@ -15,8 +15,6 @@ export const login = async (
 ) => {
 	const validatedValues = loginSchema.safeParse(values)
 
-	console.log(callbackUrl)
-
 	if (!validatedValues.success)
 		return {
 			success: false,
@@ -36,7 +34,6 @@ export const login = async (
 		await signIn('credentials', {
 			email: validatedValues.data.email,
 			password: validatedValues.data.password,
-			redirect: false,
 			redirectTo: callbackUrl
 				? decodeURIComponent(callbackUrl)
 				: DEFAULT_LOGIN_REDIRECT
