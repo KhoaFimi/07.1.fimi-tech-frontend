@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios'
 import { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
@@ -30,15 +29,9 @@ export const authConfig = {
 						refreshToken,
 						image: user.profile ? user.profile.avatar.url : ''
 					}
-				} catch (error) {
-					if (error instanceof AxiosError) {
-						const errorData = error.response?.data
-
-						throw new Error(errorData.statusCode)
-					}
+				} catch (_error) {
+					return null
 				}
-
-				return null
 			}
 		})
 	]

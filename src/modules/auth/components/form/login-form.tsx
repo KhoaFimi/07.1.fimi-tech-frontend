@@ -43,14 +43,6 @@ export const LoginForm: FC<LoginFormProps> = ({ callbackUrl }) => {
 		mutationFn: async (values: LoginSchema) => await login(values, callbackUrl),
 		onSuccess: data => {
 			if (!data?.success) {
-				if (data?.statusCode === ErrorCode.VAL_ERROR) {
-					data.error?.validationError.forEach((err: any) =>
-						form.setError(err.field, err.detail)
-					)
-
-					return
-				}
-
 				if (data?.statusCode === ErrorCode.NOT_VERIFIED) {
 					setError(undefined)
 					setWarning(data.message)

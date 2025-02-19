@@ -1,6 +1,5 @@
 'use server'
 
-import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { AuthError } from 'next-auth'
 
 import { signIn } from '@/auth'
@@ -39,43 +38,21 @@ export const login = async (
 				: DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
-		if (isRedirectError(error)) {
-			console.log('Redirect error', error)
-
-			throw error
-		}
-
 		if (error instanceof AuthError) {
-			console.log('Auth error', error)
-
-			if (error.type === 'CallbackRouteError') {
-				const statusCode = error.cause?.err?.message
-
-				switch (statusCode) {
-					case ErrorCode.WRONG_CREDENTIALS_ERROR:
-						return {
-							success: false,
-							statusCode: ErrorCode.WRONG_CREDENTIALS_ERROR,
-							message: 'Thông tin đăng nhập không chính xác'
-						}
-					case ErrorCode.NOT_VERIFIED:
-						return {
-							success: false,
-							statusCode: ErrorCode.NOT_VERIFIED,
-							message: `Tài khoản chưa được xác thực. Email xác thực đã được gửi đển '${validatedValues.data.email}'`
-						}
-					default:
-						return {
-							success: false,
-							statusCode: ErrorCode.INTERNAL_SERVER_ERROR,
-							message: 'Hệ thống gián đoạn, vui lòng thử lại sau'
-						}
-				}
+			switch (error.type) {
+				case 'CredentialsSignin':
+					return {
+						success: false,
+						statusCode: ErrorCode.WRONG_CREDENTIALS_ERROR,
+						message: 'Thông tin đăng nhập không chính xác'
+					}
+				default:
+					return {
+						success: false,
+						statusCode: ErrorCode.INTERNAL_SERVER_ERROR,
+						message: 'Hệ thống bị gián đoạn vui lòng thử lại sau'
+					}
 			}
-
-			// if (error.type === 'CredentialsSignin') {
-			// 	console.log('error in signin server action', error.message)
-			// }
 		}
 	}
 }
