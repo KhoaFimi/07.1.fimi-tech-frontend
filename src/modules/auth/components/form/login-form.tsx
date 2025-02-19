@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -23,14 +22,12 @@ import { ErrorCode } from '@/constraint/code'
 import { cn } from '@/lib/utils'
 import { login } from '@/modules/auth/actions/login'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 
 interface LoginFormProps {
 	callbackUrl?: string
 }
 
 export const LoginForm: FC<LoginFormProps> = ({ callbackUrl }) => {
-	const router = useRouter()
 	const [error, setError] = useState<string | undefined>(undefined)
 	const [warning, setWarning] = useState<string | undefined>(undefined)
 
@@ -62,12 +59,6 @@ export const LoginForm: FC<LoginFormProps> = ({ callbackUrl }) => {
 				}
 
 				setError(data?.message)
-			}
-
-			if (data?.success) {
-				router.push(
-					callbackUrl ? decodeURIComponent(callbackUrl) : DEFAULT_LOGIN_REDIRECT
-				)
 			}
 		}
 	})
