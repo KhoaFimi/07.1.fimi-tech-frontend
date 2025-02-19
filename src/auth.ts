@@ -61,11 +61,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			return refreshAccessToken(token)
 		},
 		session: async ({ session, token }) => {
-			console.log('In Session created', {
-				session,
-				token
-			})
-
 			if (token) {
 				session.userId = token.sub as string
 				session.user.id = token.sub as string

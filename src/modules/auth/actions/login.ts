@@ -36,11 +36,11 @@ export const login = async (
 		await signIn('credentials', {
 			email: validatedValues.data.email,
 			password: validatedValues.data.password,
-			redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
+			redirectTo: callbackUrl
+				? decodeURIComponent(callbackUrl)
+				: DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
-		console.log('Raw login error:', error)
-
 		if (isRedirectError(error)) {
 			throw error
 		}
