@@ -1,11 +1,13 @@
 'use server'
 
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
+import { redirect } from 'next/navigation'
 import { AuthError } from 'next-auth'
 
 import { signIn } from '@/auth'
-import { ErrorCode, SuccessCode } from '@/constraint/code'
+import { ErrorCode } from '@/constraint/code'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 import { ValidationError } from '@/types'
 
 export const login = async (
@@ -41,11 +43,9 @@ export const login = async (
 			// 	: DEFAULT_LOGIN_REDIRECT
 		})
 
-		return {
-			success: true,
-			statusCode: SuccessCode.OK,
-			message: 'Đăng nhập thành công'
-		}
+		redirect(
+			callbackUrl ? decodeURIComponent(callbackUrl) : DEFAULT_LOGIN_REDIRECT
+		)
 	} catch (error) {
 		console.log('Raw error: ', error)
 
