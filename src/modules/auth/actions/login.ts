@@ -42,13 +42,15 @@ export const login = async (
 				: DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
-		console.log('Raw error: ', error)
-
 		if (isRedirectError(error)) {
+			console.log('Redirect error', error)
+
 			throw error
 		}
 
 		if (error instanceof AuthError) {
+			console.log('Auth error', error)
+
 			if (error.type === 'CallbackRouteError') {
 				const statusCode = error.cause?.err?.message
 
