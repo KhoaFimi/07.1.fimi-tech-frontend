@@ -31,8 +31,6 @@ export const authConfig = {
 						image: user.profile ? user.profile.avatar.url : ''
 					}
 				} catch (error) {
-					console.log('error in authorized', error)
-
 					if (error instanceof AxiosError) {
 						const errorData = error.response?.data
 
