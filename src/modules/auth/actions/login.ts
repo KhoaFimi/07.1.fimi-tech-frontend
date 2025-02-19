@@ -1,6 +1,7 @@
 'use server'
 
-import { signIn } from '@/auth'
+import { redirect } from 'next/navigation'
+
 import { ErrorCode } from '@/constraint/code'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
@@ -27,13 +28,17 @@ export const login = async (
 			}
 		}
 
-	await signIn('credentials', {
-		email: validatedValues.data.email,
-		password: validatedValues.data.password,
-		redirectTo: callbackUrl
-			? decodeURIComponent(callbackUrl)
-			: DEFAULT_LOGIN_REDIRECT
-	})
+	redirect(
+		callbackUrl ? decodeURIComponent(callbackUrl) : DEFAULT_LOGIN_REDIRECT
+	)
+
+	// await signIn('credentials', {
+	// 	email: validatedValues.data.email,
+	// 	password: validatedValues.data.password,
+	// 	redirectTo: callbackUrl
+	// 		? decodeURIComponent(callbackUrl)
+	// 		: DEFAULT_LOGIN_REDIRECT
+	// })
 	// try {
 	// } catch (error) {
 	// 	if (error instanceof AuthError) {
