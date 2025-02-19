@@ -15,6 +15,8 @@ export const login = async (
 ) => {
 	const validatedValues = loginSchema.safeParse(values)
 
+	console.log(callbackUrl)
+
 	if (!validatedValues.success)
 		return {
 			success: false,
@@ -37,6 +39,8 @@ export const login = async (
 			redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
+		console.log('Raw login error:', error)
+
 		if (isRedirectError(error)) {
 			throw error
 		}
@@ -67,9 +71,9 @@ export const login = async (
 				}
 			}
 
-			if (error.type === 'CredentialsSignin') {
-				console.log('error in signin server action', error.message)
-			}
+			// if (error.type === 'CredentialsSignin') {
+			// 	console.log('error in signin server action', error.message)
+			// }
 		}
 	}
 }
