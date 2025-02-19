@@ -1,5 +1,6 @@
 'use server'
 
+import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { AuthError } from 'next-auth'
 
 import { signIn } from '@/auth'
@@ -38,11 +39,11 @@ export const login = async (
 				: DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
-		// if (isRedirectError(error)) {
-		// 	console.log('Redirect error', error)
+		if (isRedirectError(error)) {
+			console.log('Redirect error', error)
 
-		// 	throw error
-		// }
+			throw error
+		}
 
 		if (error instanceof AuthError) {
 			console.log('Auth error', error)
