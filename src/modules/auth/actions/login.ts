@@ -4,9 +4,8 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { AuthError } from 'next-auth'
 
 import { signIn } from '@/auth'
-import { ErrorCode } from '@/constraint/code'
+import { ErrorCode, SuccessCode } from '@/constraint/code'
 import { LoginSchema, loginSchema } from '@/modules/auth/schemas/login-schema'
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 import { ValidationError } from '@/types'
 
 export const login = async (
@@ -36,10 +35,17 @@ export const login = async (
 		await signIn('credentials', {
 			email: validatedValues.data.email,
 			password: validatedValues.data.password,
-			redirectTo: callbackUrl
-				? decodeURIComponent(callbackUrl)
-				: DEFAULT_LOGIN_REDIRECT
+			redirect: false
+			// redirectTo: callbackUrl
+			// 	? decodeURIComponent(callbackUrl)
+			// 	: DEFAULT_LOGIN_REDIRECT
 		})
+
+		return {
+			success: true,
+			statusCode: SuccessCode.OK,
+			message: 'Đăng nhập thành công'
+		}
 	} catch (error) {
 		console.log('Raw error: ', error)
 
