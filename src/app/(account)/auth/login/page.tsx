@@ -1,13 +1,19 @@
-import { Suspense } from 'react'
+import { FC } from 'react'
 
 import { LoginForm } from '@/modules/auth/components/form/login-form'
 
-const LoginPage = () => {
-	return (
-		<Suspense>
-			<LoginForm />
-		</Suspense>
-	)
+type SearchParams = Promise<{
+	callbackUrl?: string
+}>
+
+interface LoginPageProps {
+	searchParams: SearchParams
+}
+
+const LoginPage: FC<LoginPageProps> = async ({ searchParams }) => {
+	const { callbackUrl } = await searchParams
+
+	return <LoginForm callbackUrl={callbackUrl} />
 }
 
 export default LoginPage
