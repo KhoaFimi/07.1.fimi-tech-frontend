@@ -1,7 +1,6 @@
 'use server'
 
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
-import { redirect } from 'next/navigation'
 import { AuthError } from 'next-auth'
 
 import { signIn } from '@/auth'
@@ -37,15 +36,11 @@ export const login = async (
 		await signIn('credentials', {
 			email: validatedValues.data.email,
 			password: validatedValues.data.password,
-			redirect: false
-			// redirectTo: callbackUrl
-			// 	? decodeURIComponent(callbackUrl)
-			// 	: DEFAULT_LOGIN_REDIRECT
+			redirect: false,
+			redirectTo: callbackUrl
+				? decodeURIComponent(callbackUrl)
+				: DEFAULT_LOGIN_REDIRECT
 		})
-
-		redirect(
-			callbackUrl ? decodeURIComponent(callbackUrl) : DEFAULT_LOGIN_REDIRECT
-		)
 	} catch (error) {
 		console.log('Raw error: ', error)
 
