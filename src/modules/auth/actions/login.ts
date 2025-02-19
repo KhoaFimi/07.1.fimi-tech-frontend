@@ -41,6 +41,8 @@ export const login = async (
 				: DEFAULT_LOGIN_REDIRECT
 		})
 	} catch (error) {
+		console.log('Raw error: ', error)
+
 		if (isRedirectError(error)) {
 			throw error
 		}
