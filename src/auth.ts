@@ -1,40 +1,57 @@
 import { AxiosError } from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import NextAuth from 'next-auth'
+import { AuthOptions, getServerSession } from 'next-auth'
+import Credentials from 'next-auth/providers/credentials'
 
-import { authConfig } from '@/auth.config'
 import { http } from '@/lib/http'
+import { refreshAccessToken } from '@/lib/refresh-token'
 
-const refreshAccessToken = async (token: any) => {
-	try {
-		const res = await http.get('/auth/refresh-token', {
-			headers: {
-				'X-REFRESH-TOKEN': token.refreshToken
-			}
-		})
-
-		const resData = res.data
-
-		return {
-			...token,
-			accessToken: resData.data.accessToken,
-			refreshToken: resData.data.refreshToken ?? token.refreshToken
-		}
-	} catch (error) {
-		if (error instanceof AxiosError) {
-			return {
-				...token,
-				error: 'Refresh Access Token Error'
-			}
-		}
-	}
-}
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
-	...authConfig,
+const authOptions = {
+	session: {
+		strategy: 'jwt'
+	},
 	pages: {
 		signIn: '/auth/login'
 	},
+	providers: [
+		Credentials({
+			credentials: {
+				email: {},
+				password: {}
+			},
+			authorize: async credentials => {
+				try {
+					const res = await http.post('/auth/sign-in', credentials)
+
+					const resData = res.data
+
+					const user = resData.data.user
+					const accessToken = resData.data.accessToken
+					const refreshToken = resData.data.refreshToken
+
+					return {
+						success: true,
+						id: user.id,
+						name: user.fullname,
+						email: user.email,
+						roles: user.roles,
+						accessToken,
+						refreshToken,
+						image: user.profile ? user.profile.avatar.url : ''
+					}
+				} catch (error) {
+					if (error instanceof AxiosError) {
+						const errorData = error.response?.data
+
+						return {
+							success: false,
+							...errorData
+						}
+					}
+				}
+			}
+		})
+	],
 	callbacks: {
 		jwt: async ({ token, account, user }) => {
 			if (token.accessToken) {
@@ -52,17 +69,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				}
 			}
 
-			// Return previous token if the access token has not expired yet
 			if (Date.now() < token.accessTokenExpires) {
 				return token
 			}
 
-			// Access token has expired, try to update it
 			return refreshAccessToken(token)
+		},
+		signIn: async ({ user }) => {
+			if (!user.success) {
+				throw new Error(JSON.stringify(user))
+			}
+
+			return true
 		},
 		session: async ({ session, token }) => {
 			if (token) {
-				session.userId = token.sub as string
 				session.user.id = token.sub as string
 				session.user.name = token.name
 				session.user.accessToken = token.accessToken as string
@@ -71,4 +92,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			return session
 		}
 	}
-})
+} satisfies AuthOptions
+
+const getSession = () => getServerSession(authOptions)
+
+export { authOptions, getSession }

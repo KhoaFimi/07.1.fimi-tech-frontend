@@ -3,6 +3,7 @@ import { type DefaultSession } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 
 export type ExtendedUser = DefaultSession['user'] & {
+	id: string
 	roles: number
 	accessToken: string
 	refreshToken: string
@@ -10,6 +11,7 @@ export type ExtendedUser = DefaultSession['user'] & {
 
 declare module 'next-auth' {
 	interface User {
+		success: boolean
 		roles: number
 		accessToken: string
 		refreshToken: string
