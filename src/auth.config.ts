@@ -14,6 +14,8 @@ export const authConfig = {
 				try {
 					const res = await http.post('/auth/sign-in', credentials)
 
+					console.log(res)
+
 					const resData = res.data
 
 					const user = resData.data.user
